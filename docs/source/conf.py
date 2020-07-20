@@ -12,7 +12,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../GenericSimulationLibrary/'))
+sys.path.insert(0, os.path.abspath('../../pypsdier/'))
 
 # -- Project information -----------------------------------------------------
 
