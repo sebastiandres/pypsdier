@@ -6,12 +6,21 @@
 Welcome to the documentation!
 ======================================================
 
-**GenericSimulationLibrary** is a package encapsulates a methodology and tools for reproducible simulations. 
-The main idea is to use python and/or jupyter notebooks to provide a lightweight and for-dummies easy 
-"Simulation as a Service". 
-The framework puts emphasis on simplicity: for the client to install and use, 
-for the programmer to distribute and update, and for everyone to store and reproduce results. 
-The framework can be personalized and extended for a specific simulation need.
+**pypsdier** 
+
+
+``Pypsdier`` is a python library to solve 
+pde reaction-difussion equations, 
+considering inmmobilized catalyst particles.
+
+
+Test it
+--------
+
+* In `Google Colab <https://colab.research.google.com/drive/1mfSZQOhe7qq1C-YpfX5dDpSedXGVjz4e?usp=sharing>`_.
+
+* In `MyBinder <https://mybinder.org/v2/gh/sebastiandres/GenericSimulationLibrary/master?filepath=tests%2Fjupyter_test.ipynb>`_.
+
 
 .. toctree::
    :maxdepth: 1
@@ -24,3 +33,6 @@ The framework can be personalized and extended for a specific simulation need.
    class
    acknowledgements
    links
+
+**pypsdier** is based on `GeneralSimulationLibrary <https://readthedocs.org/projects/generalsimulationlibrary/>`_, 
+a package encapsulates a methodology and tools for reproducible simulations.
