@@ -165,14 +165,3 @@ def write_to_xls(ws, i_ws, j_ws, A, font=''):
         else:
           ws.write(i_ws+i,j_ws+j,str(A[i,j]))
   return
-
-def xls_header(ws,n,m=-1):
-  """
-  ??x  
-  """
-  ws.set_panes_frozen(True)
-  ws.set_horz_split_pos(n)
-  if m>0:
-    ws.set_vert_split_pos(m)
-  ws.set_remove_splits(True)
-  return
