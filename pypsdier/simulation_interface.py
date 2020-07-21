@@ -60,6 +60,12 @@ class SimulationInterface():
             numpy_version = numpy_version.version
         except:
             numpy_version = ""
+        # Check the version for numpy library
+        try:
+            from xlwt import __VERSION__ as xlwt_version
+            xlwt_version = xlwt_version
+        except:
+            xlwt_version = ""
         # Check the version for matplotlib pyplot
         try:
             from matplotlib import __version__ as plt_version
@@ -71,6 +77,7 @@ class SimulationInterface():
                          "python_version":python_version,
                          "GenericSimulationLibrary_version":GSL_version,
                          "numpy_version":numpy_version,
+                         "xlwt_version":xlwt_version,
                          "matplotlib_version":plt_version,
                          }
         return configuration
@@ -151,24 +158,25 @@ class SimulationInterface():
         self.plot_options=my_dict["plot_options"]
         return
 
-    def simulate(self):
+    def simulate(self, sim_type):
         """Conditionally imports the numpy library.
+        :param sim_typle: Type of simulation required. Only two options: ode or pde.
+        :type x_min: string
+
+        :return: None
+        :rtype: None
+
         """
         if self.configuration["numpy_version"]:
             from .simulation_code import execute_simulation
         else:
             print("Cannot simulate - numpy library not installed.")
             return
-        # Unpack required values
-        x_min = self.inputs["x_min"]
-        x_max = self.inputs["x_max"]
-        N_points = self.inputs["N_points"]
-        m = self.inputs["m"]
-        b = self.inputs["b"]
-        # Run the delegated simulation
-        outputs = execute_simulation(x_min, x_max, N_points, m, b)
         # Store simulation
-        self.outputs = outputs
+        if sim_type.lower()=="ode":
+            self.outputs["ode"] = execute_simulation(sim_type, self.inputs)
+        if sim_type.lower()=="pde":
+            self.outputs["pde"] = execute_simulation(sim_type, self.inputs)
         return
     
     def plot(self, filename="", display=True):
@@ -222,7 +230,7 @@ class SimulationInterface():
         plt.close()
         return
 
-    def export_xlsx(self, filename):
+    def export_xls(self, filename):
         """Creates an excel file and saves
         the plot data and simulation data.
         It helps providing a file format
@@ -231,16 +239,17 @@ class SimulationInterface():
         :param filename: Name for the file.
         :type filename: string
         """
-
+        if filename[-4:]!=".xls":
+            print("Only .xls format allowed.")
+            return
         # Create the file
-        with open(filename, "w") as fh:
-            fh.write("Este es un test\n")
-            fh.write("TEST")
-            print("Exported simulation as xlsx into file", filename)
-        self.download(filename)  #Offer to download the file 
+        if self.configuration["xlwt_version"]:
+            from .xls_library import save_as_spreadsheet
+            save_as_spreadsheet(self.inputs, self.outputs, filename)
+            self.download(filename)  #Offer to download the file 
         
     def download(self, filename):
-        """Utility to download file, using colab
+        """Utility to download file, using colab.
         """
         if self.configuration["environment"]=="google_colab":
             from google.colab import files

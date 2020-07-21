@@ -2,31 +2,21 @@ import numpy as np
 import time
 import sys
 
-def execute_simulation(x_min, x_max, N_points, m, b):
+def execute_simulation(sim_type, inputs):
     """Function that encapsulates the numerical simulation.
 
-    :param x_min: Lower bound for x
-    :type x_min: float (or int)
-    :param x_max: Upper bound for y
-    :type x_max: flot (or int)
-    :param N_points: Number of discretization points.
-    :type N_points: int
-    :param m: Slope of line
-    :type m: flot (or int)
-    :param b: Intercept of line
-    :type b: float (or int)
+    :param sim_typle: Type of simulation required. Only two options: ode or pde.
+    :type x_min: string
     :return: Dictionary with the results of the simulation
     :rtype: dict
     """
-    # Simulation
-    x = np.linspace(x_min, x_max, num=N_points)
-    y = m*x + b
-    # Some waiting, just for ilustration purposes
-    for t in range(1,13):
-        time.sleep(0.1)
-        sys.stdout.write("\rElapsed time: %03d secondss %s" %(t, ""))
-        sys.stdout.flush()
-    sys.stdout.write("\rElapsed time: %03d seconds %s" %(t, "\n"))
-    # Pack the outputs
-    outputs = {"x":x, "y":y}
+    if sim_type=="ode":
+        from .ode_library import ode_solver
+        outputs = ode_solver(inputs)
+    elif sim_type=="pde":
+        from .pde_library import pde_solver
+        outputs = pde_solver(inputs)
+    else:
+        print("Unknow simultion type. Only ode or pde allowed.")
+        outputs = {}
     return outputs

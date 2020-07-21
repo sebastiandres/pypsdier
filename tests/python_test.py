@@ -1,4 +1,4 @@
-from GenericSimulationLibrary import SimulationInterface
+from pypsdier import SimulationInterface
 
 inputs = {
          "x_min":0, 
@@ -22,7 +22,7 @@ plot_options = {
                          'linestyle':'dashed','linewidth':2, 
          },
 }
-filepath = "/test.sim"
+filepath = "test.sim"
 print("Sim file:", filepath)
 
 SI = SimulationInterface()

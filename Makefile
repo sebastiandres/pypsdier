@@ -16,12 +16,12 @@ help:
 
 make install:
 	rm -f dist/*.tar.gz
-	rm -f build/lib/GenericSimulationLibrary/*.py
-	rm -f /miniconda3/lib/python3.7/site-packages/GenericSimulationLibrary/*.py
+	rm -f build/lib/pypsdier/*.py
+	rm -f /miniconda3/lib/python3.7/site-packages/pypsdier/*.py
 	python setup.py install
 
 version:
-	nano GenericSimulationLibrary/version_file.py
+	nano pypsdier/version_file.py
 
 test.pypi:
 	rm -f dist/*.tar.gz
