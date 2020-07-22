@@ -14,6 +14,9 @@ help:
 
 .PHONY: help Makefile
 
+make show:
+	open docs/build/html/index.html
+
 make install:
 	rm -f dist/*.tar.gz
 	rm -f build/lib/pypsdier/*.py
