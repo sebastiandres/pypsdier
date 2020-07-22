@@ -1,7 +1,7 @@
 Equations
 ====================
 
-Wait, what equations are you solving?
+Wait, what **equations** are you solving?
 
 See `<https://documentation.help/Sphinx/math.html>`_ for the latex notation.
 
