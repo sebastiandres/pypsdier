@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pypsdier
 from math import exp
 

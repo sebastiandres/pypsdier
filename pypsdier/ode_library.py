@@ -1,26 +1,25 @@
-# -*- coding: utf-8 -*-
 from scipy.integrate import odeint
 import numpy as np
-import sys
 
 ################################################################################
 # MAIN SOLVER OF THE ODE
 ################################################################################
-def ode_solver(ode_params, master_file=sys.argv[0]):
+def ode_solver(inputs):
+  """Wrapper for using scipy ode solver with our notation 
   """
-  Wrapper for using scipy ode solver with our notation 
-  """
-  print("Solving the equivalent ode equation.")
+
+  print("ODE: Simulated the equivalent ode equation.")
   # Unpacking the values
-  Reaction = ode_params["ReactionFunction"]
-  params = ode_params["ReactionParameters"]
-  Tsim = ode_params["SimulationTime"]
-  Vc = ode_params["CatalystVolume"]
-  Vb = ode_params["BulkVolume"]
-  legend = ode_params["Names"]
-  IC = ode_params["InitialConcentrations"]
-  D = ode_params["EffectiveDiffusionCoefficients"]
-  E0 = ode_params["CatalystEnzymeConcentration"]
+  Reaction = inputs["ReactionFunction"]
+  params = inputs["ReactionParameters"]
+  dt_save = inputs["SavingTimeStep"]
+  Tsim = inputs["SimulationTime"]
+  Vc = inputs["CatalystVolume"]
+  Vb = inputs["BulkVolume"]
+  legend = inputs["Names"]
+  IC = inputs["InitialConcentrations"]
+  D = inputs["EffectiveDiffusionCoefficients"]
+  E0 = inputs["CatalystEnzymeConcentration"]
     
   # DEFINING A LOCAL REACTION
   # E0 must be corrected for incluying dilution
@@ -37,11 +36,8 @@ def ode_solver(ode_params, master_file=sys.argv[0]):
     return Reaction(C, E_t, *params)
 
   # DEFINING THE TIME TO SIMULATE
-  dt = 0.01
-  if "PDE" in ode_params:
-    T = ode_params["PDE"]["t"]
-  else:
-    T = np.arange(0.0, Tsim+dt, dt) 
+  dt = dt_save
+  T = np.arange(0.0, Tsim+dt, dt)
 
   # ODE SOLUTION 
   C = odeint(ode_reaction, IC, T, args=(diluted_E, dilusion, params))

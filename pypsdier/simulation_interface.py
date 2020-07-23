@@ -60,7 +60,13 @@ class SimulationInterface():
             numpy_version = numpy_version.version
         except:
             numpy_version = ""
-        # Check the version for numpy library
+        # Check the version for scipy library
+        try:
+            from scipy import version as scipy_version
+            scipy_version = scipy_version.version
+        except:
+            scipy_version = ""
+        # Check the version xlwt library
         try:
             from xlwt import __VERSION__ as xlwt_version
             xlwt_version = xlwt_version
@@ -77,6 +83,7 @@ class SimulationInterface():
                          "python_version":python_version,
                          "GenericSimulationLibrary_version":GSL_version,
                          "numpy_version":numpy_version,
+                         "scipy_version":scipy_version,
                          "xlwt_version":xlwt_version,
                          "matplotlib_version":plt_version,
                          }
@@ -159,75 +166,74 @@ class SimulationInterface():
         return
 
     def simulate(self, sim_type):
-        """Conditionally imports the numpy library.
+        """Function that encapsulates the numerical simulation.
+        Stores the simulation internally.
+
         :param sim_typle: Type of simulation required. Only two options: ode or pde.
         :type x_min: string
-
-        :return: None
-        :rtype: None
-
+        :return: Dictionary with the results of the simulation
+        :rtype: dict
         """
-        if self.configuration["numpy_version"]:
-            from .simulation_code import execute_simulation
-        else:
+        # Skip the simulation if numpy not installed
+        if not self.configuration["numpy_version"]:
             print("Cannot simulate - numpy library not installed.")
             return
-        # Store simulation
-        if sim_type.lower()=="ode":
-            self.outputs["ode"] = execute_simulation(sim_type, self.inputs)
-        if sim_type.lower()=="pde":
-            self.outputs["pde"] = execute_simulation(sim_type, self.inputs)
+        # Skip the simulation if scipy not installed
+        if not self.configuration["scipy_version"]:
+            print("Cannot simulate - scipy library not installed.")
+            return
+        # Simulate accordingly
+        if sim_type=="ode":
+            from .ode_library import ode_solver
+            self.outputs["ode"] = ode_solver(self.inputs)
+        elif sim_type=="pde":
+            from .pde_library import pde_solver
+            self.outputs["pde"] = pde_solver(self.inputs)
+        else:
+            print("Unknow simulation type. Only ode or pde allowed.")
+            outputs = {}
         return
     
-    def plot(self, filename="", display=True):
+    def plot(self, plot_type, filename="", display=True):
         """Conditionally imports the matplotlib library,
         and if possible, plots the experimental data given
         in plot_options, and the simulation data.
         
+        :param plot_type: ?
+        :type plot_type: ?
         :param filename: Filename to save the graph. If not provided, figure is not saved. Defaults to ''.
         :type filename: str, optional
         :param display: Boolean to show (True) or not show (False) the graph. Defaults to False
         :type display: bool, optional
         """
-        if self.configuration["matplotlib_version"]:
-            from matplotlib import pyplot as plt    
-        else:
-            print("Cannot plot - matplotlib library not installed.")
+        # Skip the simulation if numpy not installed
+        if not self.configuration["matplotlib_version"]:
+            print("Cannot simulate - numpy library not installed.")
             return
-        # Create the figure
-        my_fig = plt.figure(figsize=(16,8))
-        has_content = False
-        # Add the simulation, if possible
-        if "x" in self.outputs and "y" in self.outputs:
-            x = self.outputs["x"]
-            y = self.outputs["y"]
-            plt.plot(x, y, **self.plot_options["sim_kwargs"])
-            has_content=True
-        # Add the (experimental) plot_options, if possible
-        if "data_x" in self.plot_options and "data_y" in self.plot_options:
-            plt.plot(self.plot_options["data_x"], 
-                     self.plot_options["data_y"], 
-                     **self.plot_options["data_kwargs"],
-            )
-            has_content=True
-        plt.legend()
-        # Add the properties
-        if "xlabel" in self.plot_options:
-            plt.xlabel(self.plot_options["xlabel"])
-        if "ylabel" in self.plot_options:
-            plt.ylabel(self.plot_options["ylabel"])
-        if "title" in self.plot_options:
-            plt.title(self.plot_options["title"])
-        # Save figure, if filename provided
-        if filename:
-            my_fig.savefig(filename)
-        # Show figure, if asked for
-        if display:
-            if has_content:
-                plt.show()
-            else:
-                print("No content to plot.")
-        plt.close()
+        # plot
+        from .visualization import plot
+        plot(self.plot_options, self.inputs, self.outputs)
+        """
+        if plot_type=="Enzyme":
+            from .visualization import plot_E
+            T
+            E
+            plot_E(T, E, self.plot_options)
+        elif plot_type=="ode":
+            from .visualization import plt_ode
+            plot_ode(T, C)
+        elif plot_type=="ode":
+            from .visualization import plt_pde
+            plot_pde(T, C, "")
+        elif plot_type=="all":
+            from .visualization import plot_ode_and_pde
+            plot_ode_and_pde(T, C, "")
+        elif plot_type=="particle_pde"
+            from .visualization import plot_particle_pde
+            plot_particle_pde(T, C, legend)
+        else:
+            print("Plot type not known.")
+        """
         return
 
     def export_xls(self, filename):

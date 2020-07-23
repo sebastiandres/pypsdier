@@ -1,7 +1,94 @@
-# -*- coding: utf-8 -*-
 import numpy as np
 from scipy import linalg
 import sys
+import time
+
+def pde_solver(inputs, Nx=40, dt=-1):
+  """
+  Solver for the Reaction Diffusion Equation
+  """
+  start_time = time.time()
+
+  # Unpacking the values
+  Tsim = inputs["SimulationTime"]
+  dt_save = inputs["SavingTimeStep"]
+  Vc = inputs["CatalystVolume"]
+  Vb = inputs["BulkVolume"]
+  legend = inputs["Names"]
+  IC = inputs["InitialConcentrations"]
+  D = inputs["EffectiveDiffusionCoefficients"]
+  H_R = inputs["CatalystParticleRadius"]
+  H_f = inputs["CatalystParticleRadiusFrequency"]
+  Reaction = inputs["ReactionFunction"]
+  params = inputs["ReactionParameters"]
+  E = inputs["CatalystEnzymeConcentration"]
+  
+  # INDICES IMPORTANTES DE LA SIMULACION
+  Nc = len(IC)       # Numero de concentraciones
+  Nr = len(H_R) # Numero de radios distintos a considerar
+  dt_max = (min(H_R)/Nx)**2 / max(D)
+  if dt<0: #if not imposed by user
+    dt = min(0.25*dt_max,0.1)
+
+  ## CONSTRUCCION DE LAS MATRICES (fijas en las iteraciones)
+  Mid, Mls, fic = Matrices(H_R, H_f, Vc, Vb, Nx)
+  theta = 0.5
+  ME, MI, PLU = [], [], []
+  for c in range(Nc):
+    ME.append( np.matrix(Mid + dt*theta*D[c]*Mls) )
+    MI.append( np.matrix(Mid - dt*(1-theta)*D[c]*Mls) )
+    PLU.append( linalg.lu_factor( MI[c] ) )
+
+  #print("Must solve {} ecuations of size {}x{}, at least {} times".format(Nc, Mid.shape[0], Mid.shape[1], int(Tsim/dt)))
+  # INICIALIZACION DEL ALGORITMO
+  ## INICIO DEL TIEMPO
+  t = 0.0
+  ## CONCENTRACIONES INICIALES
+  v = np.zeros(Nr*Nx+1)
+  v[-1]= 1
+  C_old, C_new = [], []
+  for c in range(Nc):
+    C_old.append(v*IC[c])
+  ## VELOCIDADES INICIALES
+  v_C = Reaction(C_old, eval_E(E,t), *params)
+  # GUARDAR VALORES INICIALES
+  C_save, C_t = [], []
+  for c in range(Nc):
+    #C_save.append(float(C_old[c][-1]))
+    C_save.append(C_old[c])
+  C_t.append(C_save)
+  T_t = [t,]
+  # BUCLE CENTRAL
+  if dt_save < 0:
+    dt_save = 1.0 # incremental for saving simulation
+  print_time(t, Tsim, start_time)
+  while t<Tsim:
+    for c in range(Nc):
+      b = ME[c]*np.matrix(C_old[c]).T + dt*np.matrix(v_C[c]*fic).T
+      #C_new.append( np.array(linalg.solve(MI[c],b).T)[0] )
+      C_new.append( np.array( linalg.lu_solve(PLU[c], b ).T)[0] )
+    v_C = Reaction(C_new, eval_E(E,t), *params)
+    C_old = C_new
+    C_new = []
+    t = t+dt
+    if (t>T_t[-1]+dt_save):
+      C_save = []
+      for c in range(Nc):
+        C_save.append(C_old[c])
+      C_t.append(C_save)
+      T_t.append(float(t))
+      print_time(t, Tsim, start_time)
+  print_time(t, Tsim, start_time, end_char="\n")
+  Nt = len(T_t)
+
+  # Adding the new information to the dict  
+  pde_solution_dict = {"t":np.array(T_t), 
+                       "dt":dt,
+                       "E":np.array([eval_E(E,ti) for ti in T_t]), 
+                       "C":nested_lists(np.array(C_t), Nx)}
+
+  return pde_solution_dict
+
 
 ################################################################################
 # GENERATES THE MATRICES FOR THE ITERATION
@@ -75,95 +162,12 @@ def eval_E(E, t):
       return None
   return
 
-def print_time(t, end_char=""):
-  sys.stdout.write("\rTiempo Simulado PDE: %03d segundos %s" %(t,end_char))
+def print_time(t_sim_secs, t_total_secs, start_time, end_char=""):  
+  t_sim_secs = int(t_sim_secs)
+  t_total_secs = int(t_total_secs)
+  elapsed_time_secs = int(time.time() - start_time)
+  expected_time_secs = int(np.ceil(elapsed_time_secs * t_total_secs/ (t_sim_secs+0.1) ))
+  remaining_time = "?" if (t_sim_secs<60) else int((expected_time_secs - elapsed_time_secs)/60.0) 
+  sys.stdout.write("\rPDE: Simulated %03d secs out of %03s secs (Remaining time %s mins) %s" %(t_sim_secs, t_total_secs, remaining_time, end_char))
   sys.stdout.flush()
   return
-
-################################################################################
-# MAIN SOLVER FOR THE PDE
-################################################################################
-def pde_solver(inputs, Nx=40, dt=-1):
-  """
-  Solver for the Reaction Diffusion Equation
-  """
-  print("Solving the PDE equation.")
-  # Unpacking the values
-  Tsim = inputs["SimulationTime"]
-  dt_save = inputs["SavingTimeStep"]
-  Vc = inputs["CatalystVolume"]
-  Vb = inputs["BulkVolume"]
-  legend = inputs["Names"]
-  IC = inputs["InitialConcentrations"]
-  D = inputs["EffectiveDiffusionCoefficients"]
-  H_R = inputs["CatalystParticleRadius"]
-  H_f = inputs["CatalystParticleRadiusFrequency"]
-  Reaction = inputs["ReactionFunction"]
-  params = inputs["ReactionParameters"]
-  E = inputs["CatalystEnzymeConcentration"]
-
-  # INDICES IMPORTANTES DE LA SIMULACION
-  Nc = len(IC)       # Numero de concentraciones
-  Nr = len(H_R) # Numero de radios distintos a considerar
-  dt_max = (min(H_R)/Nx)**2 / max(D)
-  if dt<0: #if not imposed by user
-    dt = min(0.25*dt_max,0.1)
-
-  ## CONSTRUCCION DE LAS MATRICES (fijas en las iteraciones)
-  Mid, Mls, fic = Matrices(H_R, H_f, Vc, Vb, Nx)
-  theta = 0.5
-  ME, MI, PLU = [], [], []
-  for c in range(Nc):
-    ME.append( np.matrix(Mid + dt*theta*D[c]*Mls) )
-    MI.append( np.matrix(Mid - dt*(1-theta)*D[c]*Mls) )
-    PLU.append( linalg.lu_factor( MI[c] ) )
-
-  print("Must solve {} ecuations of size {}x{}, at least {} times".format(Nc, Mid.shape[0], Mid.shape[1], int(Tsim/dt)))
-  # INICIALIZACION DEL ALGORITMO
-  ## INICIO DEL TIEMPO
-  t = 0.0
-  ## CONCENTRACIONES INICIALES
-  v = np.zeros(Nr*Nx+1)
-  v[-1]= 1
-  C_old, C_new = [], []
-  for c in range(Nc):
-    C_old.append(v*IC[c])
-  ## VELOCIDADES INICIALES
-  v_C = Reaction(C_old, eval_E(E,t), *params)
-  # GUARDAR VALORES INICIALES
-  C_save, C_t = [], []
-  for c in range(Nc):
-    #C_save.append(float(C_old[c][-1]))
-    C_save.append(C_old[c])
-  C_t.append(C_save)
-  T_t = [t,]
-  # BUCLE CENTRAL
-  if dt_save < 0:
-    dt_save = 1.0 # incremental for saving simulation
-  print_time(t)
-  while t<Tsim:
-    for c in range(Nc):
-      b = ME[c]*np.matrix(C_old[c]).T + dt*np.matrix(v_C[c]*fic).T
-      #C_new.append( np.array(linalg.solve(MI[c],b).T)[0] )
-      C_new.append( np.array( linalg.lu_solve(PLU[c], b ).T)[0] )
-    v_C = Reaction(C_new, eval_E(E,t), *params)
-    C_old = C_new
-    C_new = []
-    t = t+dt
-    if (t>T_t[-1]+dt_save):
-      C_save = []
-      for c in range(Nc):
-        C_save.append(C_old[c])
-      C_t.append(C_save)
-      T_t.append(float(t))
-      print_time(t)
-  print_time(t, end_char="\n")
-  Nt = len(T_t)
-
-  # Adding the new information to the dict  
-  pde_solution_dict = {"t":np.array(T_t), 
-                       "dt":dt,
-                       "E":np.array([eval_E(E,ti) for ti in T_t]), 
-                       "C":nested_lists(np.array(C_t), Nx)}
-
-  return pde_solution_dict
