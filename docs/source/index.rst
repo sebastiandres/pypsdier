@@ -19,6 +19,7 @@ Test it
    :caption: Contents:
 
    intro
+   problem
    install
    examples
    equations
