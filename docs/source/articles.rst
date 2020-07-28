@@ -4,7 +4,6 @@ Publications
 Articles
 ----------
 
-CHANGE ME HERE!!!
 
 List of articles related to pypsdier, from most recent to oldest.
 
