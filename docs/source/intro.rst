@@ -5,8 +5,7 @@ Why do we care so much?
 *************************
 
 In 2008, we started the development of numerical implementation of 
-generic reaction diffusion equations 
-of catalysts immobilized on small porous particles. 
+generic reaction diffusion equations for reactors using catalysts prepared by enzyme immobilization on small porous particles.
 Python was a great choice back then, as it provided a language that was simple and high level, 
 but still fast enough. Nevertheless, the python installation, versioning and library 
 updates were messy and required constant supervision and side by side work. 
