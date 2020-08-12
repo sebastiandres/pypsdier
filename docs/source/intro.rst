@@ -1,6 +1,9 @@
 Introduction
 ============
 
+The immobilization of enzymes is a requisite for the re-use of these catalysts in repeated cycles in batch configuration or in continuous reactors. The recovery and/or retention of the enzyme catalyst is technical and economically feasible when micrometric or milimetric particles are used. The covalent attachment of the enzyme molecule to a porous solid support have shown high stabilization with different enzymes. Therefore, immobilization is neccessary and convinient for the efficient utilization of enzymes in technological processes. The reaction now occurs inside the particle porous instead of the bulk liquid solvent. The inmediate consequence of this fact is that, along with the reaction, mass transfer is parallely occurring. The modeling of this heterogeneous process must considers reaction and diffusion components in the reactor performance equation. Theoretical and experimental approaches dealing with reaction-diffusion equations have been published in several articles.
+
+
 Why do we care so much? 
 *************************
 
