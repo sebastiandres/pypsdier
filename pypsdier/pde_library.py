@@ -9,6 +9,8 @@ def pde_solver(inputs, Nx=40, dt=-1):
   """
   start_time = time.time()
 
+  print("Dont forget to compute how much total Enzime there is")
+
   # Unpacking the values
   Tsim = inputs["SimulationTime"]
   dt_save = inputs["SavingTimeStep"]
@@ -22,13 +24,20 @@ def pde_solver(inputs, Nx=40, dt=-1):
   Reaction = inputs["ReactionFunction"]
   params = inputs["ReactionParameters"]
   E = inputs["CatalystEnzymeConcentration"]
-  
+  if "EnzymeRadialDistribution" in inputs:
+    Z = inputs["EnzymeRadialDistribution"]
+  else:
+    Z = 1.0
   # INDICES IMPORTANTES DE LA SIMULACION
   Nc = len(IC)       # Numero de concentraciones
   Nr = len(H_R) # Numero de radios distintos a considerar
   dt_max = (min(H_R)/Nx)**2 / max(D)
   if dt<0: #if not imposed by user
     dt = min(0.25*dt_max,0.1)
+
+  ## TOTAL ENZYME CONCENTRATION
+  TEC = total_enzyme_concentration(Z, H_R, Nx)
+  print("Total Enzyme Concentration: ", E*TEC)
 
   ## CONSTRUCCION DE LAS MATRICES (fijas en las iteraciones)
   Mid, Mls, fic = Matrices(H_R, H_f, Vc, Vb, Nx)
@@ -50,6 +59,7 @@ def pde_solver(inputs, Nx=40, dt=-1):
   for c in range(Nc):
     C_old.append(v*IC[c])
   ## VELOCIDADES INICIALES
+  Z_r = eval_Z(Z, H_R, Nx)
   v_C = Reaction(C_old, eval_E(E,t), *params)
   # GUARDAR VALORES INICIALES
   C_save, C_t = [], []
@@ -64,7 +74,7 @@ def pde_solver(inputs, Nx=40, dt=-1):
   print_time(t, Tsim, start_time)
   while t<Tsim:
     for c in range(Nc):
-      b = ME[c]*np.matrix(C_old[c]).T + dt*np.matrix(v_C[c]*fic).T
+      b = ME[c]*np.matrix(C_old[c]).T + dt*np.matrix(v_C[c]*Z_r*fic).T
       #C_new.append( np.array(linalg.solve(MI[c],b).T)[0] )
       C_new.append( np.array( linalg.lu_solve(PLU[c], b ).T)[0] )
     v_C = Reaction(C_new, eval_E(E,t), *params)
@@ -161,6 +171,48 @@ def eval_E(E, t):
       print("Something went awfully bad in eval_E(E,t)")
       return None
   return
+
+def eval_Z(EnzymeRadialDistribution, H_R, Nx):
+  """
+  """
+  Nc = len(H_R)
+  rv = np.ones(Nx*Nc+1)
+  if type(EnzymeRadialDistribution) in [float, int]:
+    print("Using a constant Enzyme Radial Distribution")
+    return EnzymeRadialDistribution*rv
+  else:
+    try:
+      print("Using a Enzyme Radial Distribution defined by a function")
+      for c, Rc in enumerate(H_R):
+        for j in range(Nx):
+          rv[c*Nx + j] = EnzymeRadialDistribution(j*Rc/Nx,Rc)
+      return rv
+    except:
+      print("Something went awfully bad in eval_Z(E,t)")
+      return None
+  return
+
+def total_enzyme_concentration(EnzymeRadialDistribution, H_R, Nx):
+  """
+  The total enzyme concentration is obtained though the formula:
+   MY_FORMULA
+  You need to evaluate: 
+  * n_i: The number of particles of size R_i
+  * EC_i: The enzyme concentration.
+  sum n_i EC_i
+  """
+  Nc = len(H_R)
+  enzyme_concentration = 0
+  for c, Rc in enumerate(H_R):
+    for j in range(Nx):
+      R = j*Rc/Nx
+      if type(EnzymeRadialDistribution) in [float, int]:
+        Z = EnzymeRadialDistribution
+      else:
+        Z = EnzymeRadialDistribution(R,Rc)
+      nc_enzyme_concentration = 4 * np.pi * Z * R**2
+    enzyme_concentration = nc_enzyme_concentration 
+  return enzyme_concentration
 
 def print_time(t_sim_secs, t_total_secs, start_time, end_char=""):  
   t_sim_secs = int(t_sim_secs)

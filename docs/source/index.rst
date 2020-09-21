@@ -23,6 +23,7 @@ Test it
    install
    examples
    equations
+   implementation
    articles
    doc_for_users
    acknowledgements
