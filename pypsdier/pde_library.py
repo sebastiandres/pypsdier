@@ -9,7 +9,7 @@ def pde_solver(inputs, Nx=40, dt=-1):
   """
   start_time = time.time()
 
-  print("Dont forget to compute how much total Enzime there is")
+  #print("Dont forget to compute how much total Enzime there is")
 
   # Unpacking the values
   Tsim = inputs["SimulationTime"]
@@ -37,7 +37,7 @@ def pde_solver(inputs, Nx=40, dt=-1):
 
   ## TOTAL ENZYME CONCENTRATION
   TEC = total_enzyme_concentration(Z, H_R, Nx)
-  print("Total Enzyme Concentration: ", E*TEC)
+  #print("Total Enzyme Concentration: ", E*TEC)
 
   ## CONSTRUCCION DE LAS MATRICES (fijas en las iteraciones)
   Mid, Mls, fic = Matrices(H_R, H_f, Vc, Vb, Nx)
