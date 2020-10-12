@@ -46,33 +46,23 @@ by the total volume and the expected volume of a single particle.
 .. math::
    n_i = p_i n = p_i \frac{V_R}{\frac{4 \pi}{3} E \left[ R^3 \right]}
 
-Let's consider a numerical example. Let's imagine we have only two particle sizes: 
-:math:`R_1 = 0.9 R_0` and :math:`R_2 = 1.1 R_0` with a given parameter :math:`R_0`.
-One has a particle volume 
-:math:`V_1 = \frac{4 \pi}{3} R_1^3 = 0.9^3 \frac{4 \pi}{3} R_0^3 \approx 0.729 V_0`.
-The other has particle volume 
-:math:`V_21 = \frac{4 \pi}{3} R_2^3 = 1.1^3 \frac{4 \pi}{3} R_0^3 \approx 1.332 V_0`.
-If the distribution is uniform, :math:`p_1=p_2=0.5`, 
-that means that there are as many particles of size :math:`R_1` as :math:`R_2`, 
-:math:`n_1 = 0.5 n = n_2`. 
+Let's consider a numerical example. Let's imagine we have a total volume of :math:`V_R = 10 \ [m l] = 1.0\ E-8 \ [m^3]`
+Let's consider the following distribution :math:`p_1 = 0.4` and :math:`p_2 = 0.6`, 
+for :math:`R_1 = 0.9 R_0` and :math:`R_2 = 1.1 R_0`, where :math:`R_0=6.5 \ E-9 \ [m]` respectively.
 
-Nevertheless, in terms of total volume we have
+We can compute the following values:
 
-.. math::
-   V_R &= n_1 V_1 + n_2 V_2 \\
-       &= p_1 n V_1 + p_2 n V_2 \\
-       &= 0.5 \times 0.729 \ n + 0.5 \times 1.332 \ n \\
-
-That means that the total volume of particles of size R_1 makes up for 35% of the total volume,
-while the R_2 makes up for the other 65%. 
-Notices that a symmetric 10% difference from a reference value creates a 15% difference 
-from a uniform volume distribution.
+* The expected radius is :math:`E[R] = p_1 R_1 + p_2 R_2 = XxX`
+* The volume for a expected radius is :math:`\frac{4}{3} \pi (E[R])^3 = XxX`
+* The number of particles is :math:`V_R / \frac{4}{3} \pi (E[R])^3 = XxX`.
+* The number of particles of size :math:`R_1` and :math:`R_1` are :math:`n_1 = p_1 n = XxX` y :math:`n_1 = p_1 n = XxX`, respectively. 
+* The total surface is 
 
 How to model the effective reaction rate 
 ---------------------------------------------
 
 The effective reaction rate :math:`v_e` is a function of several terms, 
-and applies only inside the particles (where the catalist exists). 
+and occurs only inside the particles, where the catalist is attached to the surface of the porous structure. 
 In a particle of radius :math:`R_i`, it would be:
 
 .. math::
@@ -83,22 +73,21 @@ In a particle of radius :math:`R_i`, it would be:
 Where: 
 
 * :math:`v(S, E, \textrm{other relevant parameters})`: the reaction rate, measured in  the units of :math:`S_b` per second.
-* :math:`I(t)`: Enzime Inactivation. It only possess time dependance, being bounded between 0 and 1: :math:`0 \leq I(t) \leq 1`. It has no units.
-* :math:`Z(r, R_i)`: Enzime radial distribution (again, no units), :math:`0 < Z(r, R_i)` and such that the total enzime applied to all particles is a known value :math:`E_0`:
+* :math:`I(t)`: Enzime Inactivation. It only has time dependance, being bounded between 0 and 1 and decreasing: :math:`0 \leq I(t) \leq 1`. It has no units. It models tha catalyst inhibition growing over time.
+* :math:`Z(r, R_i)`: Enzime radial distribution, that only has space dependance and being non-negative, :math:`0 < Z(r, R_i)`    and such that the total enzime applied to all particles is a known value :math:`E_0`:
 
 .. math::
    E_0 &= \sum_{i=1}^{N_R} n_i \int_0^{R_i} E_{max} Z(r, R_i) 4 \pi r^2 dr \\
    &= n \sum_{i=1}^{N_R} \frac{n_i}{n} \int_0^{R_i} E_{max} Z(r, R_i) 4 \pi r^2 dr \\ 
-   &= \frac{V_R}{\sum_{i=1}^{N_R} p_i 4/3 \pi R_i^3 } \sum_{i=1}^{N_R} p_i \int_0^{R_i} E_{max} Z(r, R_i) 4 \pi r^2 dr \\
-   &= 3 \frac{V_R E_{max} }{\sum_{i=1}^{N_R} p_i R_i^3 } \sum_{i=1}^{N_R} p_i \int_0^{R_i} Z(r, R_i) r^2 dr
+   &= n E_{max} 4 \pi \sum_{i=1}^{N_R} p_i \int_0^{R_i} Z(r, R_i) r^2 dr
 
-Here we have used :math:`n_i` the number of particles of size :math:`R_i`, :math:`n` the total number of particles,
+Here we have used :math:`n_i` the number of particles of size :math:`R_i`, 
+and :math:`n` the total number of particles,
 and the relationship between volume and particle size distibution:
 
 .. math::
-   V_R = \sum_{i=1}^{N_R} n_i \frac{4}{3} \pi R_i^3 = n \sum_{i=1}^{N_R} \frac{n_i}{n} \frac{4}{3} \pi R_i^3
-       = n \sum_{i=1}^{N_R} p_i \frac{4}{3} \pi R_i^3 = \frac{4 \pi n}{3} E \left[ R^3 \right]
-
+   n = \frac{V_R}{\frac{4 \pi}{3} E \left[ R^3 \right]}
+     = \frac{V_R}{\sum_{i=1}^{N_R} p_i \frac{4}{3} \pi R_i^3} 
 
 The equations
 ---------------
@@ -109,10 +98,9 @@ The reaction diffusion equation, for :math:`t>0` and :math:`0<r<R_i`:
 
 .. math:: 
    \frac{\partial S}{\partial t}(t,r,R_i) = D_S \left(\frac{\partial^2 S}{\partial r^2}(t,r,R_i) 
-   + \frac{2}{r}\frac{\partial S}{\partial r}(t,r,R_i)\right) - V\left(S(t,r,R_i)\right) I(t) Z(r, R_i)
+   + \frac{2}{r}\frac{\partial S}{\partial r}(t,r,R_i)\right) - v_e\left(S(t,r,R_i)\right) I(t) Z(r, R_i)
 
-The boundary condition at the center of the particle comes out from by imposing 
-that there can not be any flux through the center of the sphere. This is, for :math:`t>0`:
+The boundary condition at the center of the particle for :math:`t>0`:
 
 .. math:: 
    \frac{\partial S}{\partial r}(t, 0, R_i) = 0
@@ -129,10 +117,8 @@ and
    &= - 3 D_S \frac{V_c}{V_R E \left[ R^3 \right] } E \left[ R^2 \left. \frac{\partial S}{\partial r} \right|_{r=R} \right] \\
    &= - 3 D_S \frac{V_c}{V_R \sum_{i=1} ^{N_R} R_i^3} \sum_{i=1} ^{N_R} R_i^2  \frac{\partial S(t,R_i, R_i)}{\partial R} \\
 
-Which come from the continuity on the surface for the variables and the flux condition.
-
 The initial conditions are 
 
 .. math:: 
    S_b(0) &= S_0 \\
-   S(0,r, R_i) &= 0 \textrm{ for } 0 \leq r < R_i
+   S(0,r, R_i) &= 0 \textrm{ for } 0 \leq r < R_i \textrm{ and } i \in \{ 1, 2, \cdots, N_R \} 

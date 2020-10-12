@@ -127,7 +127,27 @@ class SimulationInterface():
         """
         self.inputs = inputs
         self.plot_options = plot_options
-
+        # Some other computations
+        #from IPython import embed; embed()
+        ## Compute the expected radius
+        E_R = sum([R_i*p_i for R_i, p_i in zip(self.inputs['CatalystParticleRadius'], self.inputs['CatalystParticleRadiusFrequency'])])
+        ## Compute the expected value
+        from math import pi
+        E_V = 4*pi/3 * E_R**3 
+        ## Compute the total number of particles
+        E_n = self.inputs['BulkVolume'] / E_V
+        ## Compute the number of particles for each size
+        n_list = []
+        for p_i in self.inputs['CatalystParticleRadiusFrequency']:
+            n_list.append(E_n * p_i)
+        # Setup
+        setup = {}
+        setup["ExpectedParticleRadius"] = E_R
+        setup["ExpectedParticleVolume"] = E_V
+        setup["ExpectedParticleNumber"] = E_n
+        setup["ParticleNumberByRadius"] = n_list
+        return
+        
     def save(self, filename):
         """Saves the current state of the simulation, with all
         the provided information. The created file can be

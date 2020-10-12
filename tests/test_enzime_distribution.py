@@ -9,6 +9,7 @@ only for numerical reasons.
 It has constant catalyst enzyme Concentration, and the enzymes are kept in
 a unique catalyst of particle radii 100 [um].
 """
+
 ################################################################################
 # AUXILIAR DEFINITIONS OF REACTION AND ENZIMATIC CHARGE
 ################################################################################
@@ -21,6 +22,13 @@ def MichaelisMenten(Cs, E0, k, K):
   v = (-v_S,)
   return v
 
+def EnzymeRadialDistribution(r, R):
+  """
+  Radial distribution function for the Enzyme concentration
+  """
+  x = r/R
+  return exp(2*(x-1.))
+
 ################################################################################
 # THE DICT inputs WILL CONTAIN ALL THE REQUIRED INFORMATION
 # MUST PROVIDE A UNIQUE SEED FOR THE EXPERIMENT (WILL OVERWRITE FILE IF EXISTS)
@@ -31,16 +39,19 @@ def MichaelisMenten(Cs, E0, k, K):
 inputs = {}
 inputs["SimulationTime"] = 1*60. # [s], total time to be simulated 
 inputs["SavingTimeStep"] = 10. # [s], saves only one data per second
-inputs["CatalystVolume"]  = 0.01 # [mL], total volume of all catalyst particles in reactor
-inputs["BulkVolume"]  = 40.0  # [mL], bulk volume of the liquid phase
+inputs["CatalystVolume"]  = 1.0 # [mL], total volume of all catalyst particles in reactor
+inputs["BulkVolume"]  = 100.0  # [mL], bulk volume of the liquid phase
 inputs["Names"] = ('Substrat',)  # legend for the xls, reports and plots
-inputs["InitialConcentrations"] = (1.0,)   # [mM], initial concentration of substrates and products
-inputs["EffectiveDiffusionCoefficients"] = (1.0E-9,)  # [m2/s], effective diffusion coefficient for substrates and products
-inputs["CatalystParticleRadius"] = [90.E-6, 100.E-6] # [m], list of possible catalyst particle radiuses
-inputs["CatalystParticleRadiusFrequency"] = [0.4, 0.6] # [], list of corresponding frequencies of catalyst particle radiuses
+inputs["InitialConcentrations"] = (1.3,)   # [mM], initial concentration of substrates and products
+inputs["EffectiveDiffusionCoefficients"] = (5.3E-10,)  # [m2/s], effective diffusion coefficient for substrates and products
+#inputs["CatalystParticleRadius"] = [69.3E-6] # [m], list of possible catalyst particle radiuses
+#inputs["CatalystParticleRadiusFrequency"] = [1.0] # [], list of corresponding frequencies of catalyst particle radiuses
+inputs["CatalystParticleRadius"] = [59.3E-6, 69.3E-6] # [m], list of possible catalyst particle radiuses
+inputs["CatalystParticleRadiusFrequency"] = [.4, 0.6] # [], list of corresponding frequencies of catalyst particle radiuses
 inputs["ReactionFunction"] = MichaelisMenten # function defining the reaction 
 inputs["ReactionParameters"] = (41 , 0.13)   # [1/s], [mM/s], parameters to be used in the reaction function after Cs and E0 
-inputs["CatalystEnzymeConcentration"] = 0.5 # [mM] can be a float, int or a function returning float or int. 
+inputs["CatalystEnzymeConcentration"] = 0.35 # [mM] can be a float, int or a function returning float or int. 
+inputs["EnzymeRadialDistribution"] = EnzymeRadialDistribution # function to be evaluated for the radial distribution
 
 plot_options = {}
 plot_options["xlabel"] = "x [x_units]"
