@@ -37,8 +37,8 @@ def EnzymeRadialDistribution(r, R):
 # ReactionParameters NEEDS TO BE COMPATIBLE WITH THE DEFINITION OF THE ReactionFunction
 ################################################################################
 inputs = {}
-inputs["SimulationTime"] = 1*60. # [s], total time to be simulated 
-inputs["SavingTimeStep"] = 10. # [s], saves only one data per second
+inputs["SimulationTime"] = 2*60. # [s], total time to be simulated 
+inputs["SavingTimeStep"] = 5. # [s], saves only one data per second
 inputs["CatalystVolume"]  = 1.0 # [mL], total volume of all catalyst particles in reactor
 inputs["BulkVolume"]  = 100.0  # [mL], bulk volume of the liquid phase
 inputs["Names"] = ('Substrat',)  # legend for the xls, reports and plots
@@ -54,19 +54,19 @@ inputs["CatalystEnzymeConcentration"] = 0.35 # [mM] can be a float, int or a fun
 inputs["EnzymeRadialDistribution"] = EnzymeRadialDistribution # function to be evaluated for the radial distribution
 
 plot_options = {}
-plot_options["xlabel"] = "x [x_units]"
-plot_options["ylabel"] = "y [y_units]",
-plot_options["title" ] = "My title",
-plot_options["data_x"] = [ 0.1, 2.1,  3.9,  6.1,  7.9,  9.9],  
-plot_options["data_y"] = [-2.8, 3.6, 10.7, 13.6, 22.8, 27.1],  # -2 + 3*x + error
+plot_options["label_x"] = "x [x_units]"
+plot_options["label_y"] = "y [y_units]"
+plot_options["title" ] = "My title"
+plot_options["data_x"] = [0.0, 30, 60, 90, 120]
+plot_options["data_y"] = [1.3, 0.4, 0.1, 0.0, 0.0]
 plot_options["data_kwargs"] = {'label':'exp', 'color':'red', 
                          'marker':'s', 'markersize':6, 
                          'linestyle':'none','linewidth':2, 
-         },
+         }
 plot_options["sim_kwargs"] = {'label':'sim', 'color':'black', 
                          'marker':'o', 'markersize':6, 
                          'linestyle':'dashed','linewidth':2, 
-         },
+         }
 
 ################################################################################
 # SOLVE THE PDE AND SAVE THE RESULT INTO THE SEED
@@ -77,5 +77,5 @@ SI.status()
 SI.simulate("ode")
 SI.simulate("pde")
 SI.save("example_0.rde")
-SI.plot(filename="example_0.png")
+SI.plot(plot_type="pde", filename="example_0.png")
 SI.export_xls("example_0.xls")

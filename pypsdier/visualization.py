@@ -18,20 +18,24 @@ def plot(plot_options, inputs, outputs):
     fig = pyplot.figure()
     ax = pyplot.subplot(111)
     # ode
-    t_sim_ode = outputs["ode"]["t"] / 60. # in minutes
-    PenG_sim_ode = outputs["ode"]["C"][:,0]
-    pyplot.plot(t_sim_ode, PenG_sim_ode, '--b', lw=2.0, alpha=0.5, label="Free enzyme")
+    if "ode" in outputs:
+      t_sim_ode = outputs["ode"]["t"] # / 60. # in minutes
+      PenG_sim_ode = outputs["ode"]["C"][:,0]
+      pyplot.plot(t_sim_ode, PenG_sim_ode, '--b', lw=2.0, alpha=0.5, label="Free enzyme")
     # pde
-    t_sim_pde = outputs["pde"]["t"] / 60. # in minutes
-    PenG_sim_pde = outputs["pde"]["C"][0][0][:,-1]
-    pyplot.plot(t_sim_pde, PenG_sim_pde, 'b', lw=2.0, alpha=1.0, label="Immobilized enzyme")
-    # exp
-    data_x  = plot_options["data_x"]
-    data_y  = plot_options["data_y"]
-    pyplot.plot(data_x, data_y, 'bs', mew=1.0, alpha=0.5, label="Experimental data")
+    if "pde" in outputs:
+      t_sim_pde = outputs["pde"]["t"] # / 60. # in minutes
+      PenG_sim_pde = outputs["pde"]["C"][0][0][:,-1]
+      pyplot.plot(t_sim_pde, PenG_sim_pde, 'b', lw=2.0, alpha=1.0, label="Immobilized enzyme")
+    # exps
+    if "data_x" in plot_options:
+      data_x  = plot_options["data_x"]
+      data_y  = plot_options["data_y"]
+      pyplot.plot(data_x, data_y, 'bs', mew=1.0, alpha=0.5, label="Experimental data")
     # labels
-    pyplot.xlabel("Time [min]")
-    pyplot.ylabel("PenG concentration [mM]")
+    pyplot.xlabel(plot_options["label_x"])
+    pyplot.ylabel(plot_options["label_y"])
+    pyplot.title(plot_options["title"])
     xlim = ax.get_xlim()
     dx = .025*(xlim[1]-xlim[0])
     ax.set_xlim(xlim[0]-dx, xlim[1]+dx)
@@ -40,12 +44,15 @@ def plot(plot_options, inputs, outputs):
     ax.set_ylim(ylim[0]-dy, ylim[1]+dy)
     #pyplot.title("Experimental results versus reaction / reaction diffusion models")
     # Shink size to fit legend
+    ax.legend()
+    """                    
     box = ax.get_position()
     ax.set_position([box.x0, box.y0 + box.height * 0.1,
                     box.width, box.height * 0.9])
     ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.10), 
               fancybox=True, shadow=True, ncol=3, 
               numpoints=1) # Show only * instead of ** as marker legend
+    """           
     # Save figure
     pyplot.show()  
     return
