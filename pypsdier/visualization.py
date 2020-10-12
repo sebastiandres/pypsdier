@@ -15,7 +15,7 @@ def plot(plot_options, inputs, outputs):
     :type output: [type]
     """
     # Plot the different concentrations
-    fig = pyplot.figure()
+    fig = pyplot.figure(figsize=(10,8))
     ax = pyplot.subplot(111)
     # ode
     if "ode" in outputs:
