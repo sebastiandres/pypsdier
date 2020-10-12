@@ -24,11 +24,11 @@ def plot(plot_options, inputs, outputs):
     # pde
     t_sim_pde = outputs["pde"]["t"] / 60. # in minutes
     PenG_sim_pde = outputs["pde"]["C"][0][0][:,-1]
-    pyplot.plot(t_sim_pde, PenG_sim_pde,   'b', lw=2.0, alpha=1.0, label="Immobilized enzyme")
+    pyplot.plot(t_sim_pde, PenG_sim_pde, 'b', lw=2.0, alpha=1.0, label="Immobilized enzyme")
     # exp
-    t_exp  = plot_options["t_exp"]
-    PenG_exp  = plot_options["PenG_exp"]
-    pyplot.plot(t_exp, PenG_exp, 'bs', mew=1.0, alpha=0.5, label="Experimental data")
+    data_x  = plot_options["data_x"]
+    data_y  = plot_options["data_y"]
+    pyplot.plot(data_x, data_y, 'bs', mew=1.0, alpha=0.5, label="Experimental data")
     # labels
     pyplot.xlabel("Time [min]")
     pyplot.ylabel("PenG concentration [mM]")
