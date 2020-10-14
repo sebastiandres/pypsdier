@@ -1,5 +1,5 @@
-import pickle
 import sys
+import os
 
 class SimulationInterface():
     """GenericSimulationLibrary is a package encapsulates a methodology 
@@ -72,6 +72,11 @@ class SimulationInterface():
             xlwt_version = xlwt_version
         except:
             xlwt_version = ""
+        # Check the version for dill
+        try:
+            from dill import __version__ as dill_version
+        except:
+            dill_version = ""
         # Check the version for matplotlib pyplot
         try:
             from matplotlib import __version__ as plt_version
@@ -86,6 +91,7 @@ class SimulationInterface():
                          "scipy_version":scipy_version,
                          "xlwt_version":xlwt_version,
                          "matplotlib_version":plt_version,
+                         "dill_version":dill_version,
                          }
         return configuration
 
@@ -156,6 +162,11 @@ class SimulationInterface():
         :param filename: Name for the simulation file.
         :type filename: string
         """
+        if not self.configuration["dill_version"]:
+            print("Cannot save - dill library not installed.")
+            return
+        else:
+            import dill
         # Pickle and return
         my_dict = {
                    "configuration":self.configuration,
@@ -163,9 +174,10 @@ class SimulationInterface():
                    "outputs":self.outputs,
                    "plot_options":self.plot_options,
                   }
+        filepath = os.path.abspath(filename)
         with open(filename, "wb") as fh:
-            pickle.dump(my_dict, fh)
-            print("Saving simulation into file ", filename)         
+            dill.dump(my_dict, fh)
+            print(f"Saving simulation into file at {filepath}")
         self.download(filename)  #Offer to download the file 
         return
 
@@ -176,13 +188,20 @@ class SimulationInterface():
         :param filename: Name for the simulation file.
         :type filename: string
         """
+        if not self.configuration["dill_version"]:
+            print("Cannot load - dill library not installed.")
+            return
+        else:
+            import dill
         # Unpack and assign
-        with open(filename, "rb") as f:
-            my_dict=pickle.load(f)
+        filepath = os.path.abspath(filename)
+        with open(filepath, "rb") as fh:
+            my_dict=dill.load(fh)
         self.configuration=my_dict["configuration"]
         self.inputs=my_dict["inputs"] 
         self.outputs=my_dict["outputs"] 
         self.plot_options=my_dict["plot_options"]
+        print(f"Loaded a simulation from {filepath}")
         return
 
     def simulate(self, sim_type):
@@ -214,7 +233,7 @@ class SimulationInterface():
             outputs = {}
         return
     
-    def plot(self, plot_type, filename="", display=True):
+    def plot(self, plot_type="all", filename="", display=True):
         """Conditionally imports the matplotlib library,
         and if possible, plots the experimental data given
         in plot_options, and the simulation data.
@@ -281,12 +300,3 @@ class SimulationInterface():
             from google.colab import files
             files.download(filename)
         return
-
-def test(iot1, o2p):
-    """[summary]
-
-    :param iot1: [description]
-    :type iot1: [type]
-    :param o2p: [description]
-    :type o2p: [type]
-    """

@@ -28,12 +28,21 @@ def pde_solver(inputs, Nx=40, dt=-1):
     Z = inputs["EnzymeRadialDistribution"]
   else:
     Z = 1.0
+
   # INDICES IMPORTANTES DE LA SIMULACION
   Nc = len(IC)       # Numero de concentraciones
   Nr = len(H_R) # Numero de radios distintos a considerar
   dt_max = (min(H_R)/Nx)**2 / max(D)
   if dt<0: #if not imposed by user
     dt = min(0.25*dt_max,0.1)
+
+  if Nc:
+    N_substance_str = "a single substance"
+  else:
+    N_substance_str = f"the {Nc} subtances"
+
+  print(f"PDE: Solving the complete reaction-diffusion problem, " + \
+       f"considering {N_substance_str} and {Nr} particle radii.")
 
   ## TOTAL ENZYME CONCENTRATION
   TEC = total_enzyme_concentration(Z, H_R, Nx)
@@ -178,11 +187,11 @@ def eval_Z(EnzymeRadialDistribution, H_R, Nx):
   Nc = len(H_R)
   rv = np.ones(Nx*Nc+1)
   if type(EnzymeRadialDistribution) in [float, int]:
-    print("Using a constant Enzyme Radial Distribution")
+    #print("Using a constant Enzyme Radial Distribution")
     return EnzymeRadialDistribution*rv
   else:
     try:
-      print("Using a Enzyme Radial Distribution defined by a function")
+      #print("Using a Enzyme Radial Distribution defined by a function")
       for c, Rc in enumerate(H_R):
         for j in range(Nx):
           rv[c*Nx + j] = EnzymeRadialDistribution(j*Rc/Nx,Rc)
@@ -220,6 +229,6 @@ def print_time(t_sim_secs, t_total_secs, start_time, end_char=""):
   elapsed_time_secs = int(time.time() - start_time)
   expected_time_secs = int(np.ceil(elapsed_time_secs * t_total_secs/ (t_sim_secs+0.1) ))
   remaining_time = "?" if (t_sim_secs<60) else int((expected_time_secs - elapsed_time_secs)/60.0) 
-  sys.stdout.write("\rPDE: Simulated %03d secs out of %03s secs (Remaining time %s mins) %s" %(t_sim_secs, t_total_secs, remaining_time, end_char))
+  sys.stdout.write("\rSimulated %03d secs out of %03s secs (Remaining time %s mins) %s" %(t_sim_secs, t_total_secs, remaining_time, end_char))
   sys.stdout.flush()
   return

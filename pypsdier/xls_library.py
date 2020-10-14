@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from xlwt import Workbook, easyxf
 import numpy as np
+import os
 
 ##########################################################################
 # Fonts
@@ -17,10 +18,12 @@ def save_as_spreadsheet(inputs, outputs, filename):
   of the simulation in format xls 
   """
   wb = Workbook()
+  filepath = os.path.abspath(filename)
   write_parameters_sheet(wb, inputs)
   if "ode" in outputs and "pde" in outputs:
     write_ode_and_pde_sheet(wb, inputs, outputs)
-  wb.save(filename)
+  wb.save(filepath)
+  print(f"Saving simulation as xls file at {filepath}")
   return
 
 

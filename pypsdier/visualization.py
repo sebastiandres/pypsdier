@@ -4,7 +4,7 @@ from matplotlib import rc
 #from pdb import set_trace as st
 import numpy as np
 
-def plot(plot_options, inputs, outputs):
+def plot(plot_options="all", inputs={}, outputs={}):
     """[summary]
 
     :param inputs: [description]
@@ -44,15 +44,12 @@ def plot(plot_options, inputs, outputs):
     ax.set_ylim(ylim[0]-dy, ylim[1]+dy)
     #pyplot.title("Experimental results versus reaction / reaction diffusion models")
     # Shink size to fit legend
-    ax.legend()
-    """                    
     box = ax.get_position()
     ax.set_position([box.x0, box.y0 + box.height * 0.1,
                     box.width, box.height * 0.9])
     ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.10), 
               fancybox=True, shadow=True, ncol=3, 
               numpoints=1) # Show only * instead of ** as marker legend
-    """           
     # Save figure
     pyplot.show()  
     return
