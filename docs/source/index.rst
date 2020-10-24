@@ -5,8 +5,6 @@ Welcome to the pypsdier's documentation!
 pde reaction-difussion equations, 
 considering inmmobilized catalyst particles.
 
-EXPLICIT ERROR THAT WILL BE ERASED
-
 Test it
 --------
 
