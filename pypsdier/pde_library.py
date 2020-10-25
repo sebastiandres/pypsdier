@@ -105,7 +105,6 @@ def pde_solver(inputs, Nx=40, dt=-1):
                        "dt":dt,
                        "E":np.array([eval_E(E,ti) for ti in T_t]), 
                        "C":nested_lists(np.array(C_t), Nx)}
-  print(pde_solution_dict)
   return pde_solution_dict
 
 ################################################################################
