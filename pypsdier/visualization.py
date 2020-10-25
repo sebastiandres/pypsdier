@@ -4,7 +4,8 @@ from matplotlib import rc
 #from pdb import set_trace as st
 import numpy as np
 
-def plot(plot_options="all", inputs={}, outputs={}):
+def plot(plot_options="all", inputs={}, outputs={},
+         figsize=(12,8), filename="", display=True):
     """[summary]
 
     :param inputs: [description]
@@ -14,24 +15,38 @@ def plot(plot_options="all", inputs={}, outputs={}):
     :param output: [description]
     :type output: [type]
     """
+    # Default values
+    default_ode_kwargs = {'label':'ode', 'color':'blue', 'marker':'', 'markersize':6, 'linestyle':'dashed','linewidth':2, 'alpha':0.5}
+    default_pde_kwargs = {'label':'pde', 'color':'blue', 'marker':'', 'markersize':6, 'linestyle':'solid','linewidth':2, 'alpha':0.5}
+    default_data_kwargs = {'label':'exp', 'color':'red', 'marker':'s', 'markersize':6, 'linestyle':'none','linewidth':2, 'alpha':0.5}
+
     # Plot the different concentrations
-    fig = pyplot.figure(figsize=(10,8))
+    fig = pyplot.figure(figsize=figsize)
     ax = pyplot.subplot(111)
     # ode
     if "ode" in outputs:
-      t_sim_ode = outputs["ode"]["t"] # / 60. # in minutes
-      PenG_sim_ode = outputs["ode"]["C"][:,0]
-      pyplot.plot(t_sim_ode, PenG_sim_ode, '--b', lw=2.0, alpha=0.5, label="Free enzyme")
+        t_sim_ode = outputs["ode"]["t"] # / 60. # in minutes
+        PenG_sim_ode = outputs["ode"]["C"][:,0]
+        if "ode_kwargs" in plot_options:
+          pyplot.plot(t_sim_ode, PenG_sim_ode, **plot_options["ode_kwargs"])
+        else:
+          pyplot.plot(t_sim_ode, PenG_sim_ode, **default_ode_kwargs)
     # pde
     if "pde" in outputs:
-      t_sim_pde = outputs["pde"]["t"] # / 60. # in minutes
-      PenG_sim_pde = outputs["pde"]["C"][0][0][:,-1]
-      pyplot.plot(t_sim_pde, PenG_sim_pde, 'b', lw=2.0, alpha=1.0, label="Immobilized enzyme")
+        t_sim_pde = outputs["pde"]["t"] # / 60. # in minutes
+        PenG_sim_pde = outputs["pde"]["C"][0][0][:,-1]
+        if "pde_kwargs" in plot_options:
+          pyplot.plot(t_sim_pde, PenG_sim_pde, **plot_options["pde_kwargs"])
+        else:
+          pyplot.plot(t_sim_pde, PenG_sim_pde, **default_pde_kwargs)
     # exps
-    if "data_x" in plot_options:
-      data_x  = plot_options["data_x"]
-      data_y  = plot_options["data_y"]
-      pyplot.plot(data_x, data_y, 'bs', mew=1.0, alpha=0.5, label="Experimental data")
+    if ("data_x" in plot_options) and ("data_y" in plot_options):
+        data_x  = plot_options["data_x"]
+        data_y  = plot_options["data_y"]
+        if "data_kwargs" in plot_options:
+          pyplot.plot(data_x, data_y, **plot_options["data_kwargs"])
+        else:
+          pyplot.plot(data_x, data_y, 'bs', **default_data_kwargs)
     # labels
     pyplot.xlabel(plot_options["label_x"])
     pyplot.ylabel(plot_options["label_y"])
@@ -51,7 +66,10 @@ def plot(plot_options="all", inputs={}, outputs={}):
               fancybox=True, shadow=True, ncol=3, 
               numpoints=1) # Show only * instead of ** as marker legend
     # Save figure
-    pyplot.show()  
+    if display:
+        pyplot.show()
+    if filename:
+        pyplot.savefig(filename)
     return
 
 ################################################################################

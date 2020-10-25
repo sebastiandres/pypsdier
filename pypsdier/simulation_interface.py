@@ -110,16 +110,23 @@ class SimulationInterface():
         print("Inputs:")
         if self.inputs:
             for key in self.inputs:
-                print("    "+key, self.inputs[key])
+                print("    "+key+":", self.inputs[key])
         else:
             print("    No inputs")
-        # plot_options
-        print("plot_options:")
+        # Plot Options
+        print("Plot Options:")
         if self.plot_options:
             for key in self.plot_options:
-                print("    "+key, self.plot_options[key])
+                print("    "+key+":", self.plot_options[key])
         else:
             print("    No plot_options")
+        # Simulation
+        print("Simulations:")
+        answer_dict = {True:"yes", False:"no"}
+        has_ode = "ode" in self.outputs 
+        print("    ODE:", answer_dict[has_ode])
+        has_pde = "pde" in self.outputs 
+        print("    PDE:", answer_dict[has_pde])
         return  
 
     def new(self, inputs, plot_options=None):
@@ -233,13 +240,15 @@ class SimulationInterface():
             outputs = {}
         return
     
-    def plot(self, plot_type="all", filename="", display=True):
+    def plot(self, figsize=(12,8), plot_type="all", filename="", display=True):
         """Conditionally imports the matplotlib library,
         and if possible, plots the experimental data given
         in plot_options, and the simulation data.
         
         :param plot_type: ?
         :type plot_type: ?
+        :param figsize: Size of the figure
+        :type figsize: tuple, optional
         :param filename: Filename to save the graph. If not provided, figure is not saved. Defaults to ''.
         :type filename: str, optional
         :param display: Boolean to show (True) or not show (False) the graph. Defaults to False
@@ -251,7 +260,8 @@ class SimulationInterface():
             return
         # plot
         from .visualization import plot
-        plot(self.plot_options, self.inputs, self.outputs)
+        plot(self.plot_options, self.inputs, self.outputs, 
+             figsize=figsize, filename=filename, display=display)
         """
         if plot_type=="Enzyme":
             from .visualization import plot_E

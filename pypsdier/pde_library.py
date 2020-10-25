@@ -105,9 +105,8 @@ def pde_solver(inputs, Nx=40, dt=-1):
                        "dt":dt,
                        "E":np.array([eval_E(E,ti) for ti in T_t]), 
                        "C":nested_lists(np.array(C_t), Nx)}
-
+  print(pde_solution_dict)
   return pde_solution_dict
-
 
 ################################################################################
 # GENERATES THE MATRICES FOR THE ITERATION
@@ -148,7 +147,7 @@ def Matrices(H_R, H_f, Vc, Vb, Nx):
   return Id, Ls, bc
 
 ################################################################################
-# NO IDEA WHAT THIS WAS!!!
+# This converts from the "zipped-format" to the more natural separated format
 ################################################################################
 def nested_lists(C,Nx):
   Nt, Nc, N = C.shape
@@ -228,7 +227,7 @@ def print_time(t_sim_secs, t_total_secs, start_time, end_char=""):
   t_total_secs = int(t_total_secs)
   elapsed_time_secs = int(time.time() - start_time)
   expected_time_secs = int(np.ceil(elapsed_time_secs * t_total_secs/ (t_sim_secs+0.1) ))
-  remaining_time = "?" if (t_sim_secs<60) else int((expected_time_secs - elapsed_time_secs)/60.0) 
+  remaining_time = "< 1" if (t_sim_secs<60) else int((expected_time_secs - elapsed_time_secs)/60.0) 
   sys.stdout.write("\rSimulated %03d secs out of %03s secs (Remaining time %s mins) %s" %(t_sim_secs, t_total_secs, remaining_time, end_char))
   sys.stdout.flush()
   return

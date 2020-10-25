@@ -44,9 +44,9 @@ inputs["ReactionParameters"] = (41 , 0.13)   # [1/s], [mM/s], parameters to be u
 inputs["CatalystEnzymeConcentration"] = 0.5 # [mM] can be a float, int or a function returning float or int. 
 
 plot_options = {}
-plot_options["xlabel"] = "x [x_units]"
-plot_options["ylabel"] = "y [y_units]",
 plot_options["title" ] = "My title",
+plot_options["label_x"] = "x [x_units]"
+plot_options["label_y"] = "y [y_units]",
 plot_options["data_x"] = [ 0.1, 2.1,  3.9,  6.1,  7.9,  9.9],  
 plot_options["data_y"] = [-2.8, 3.6, 10.7, 13.6, 22.8, 27.1],  # -2 + 3*x + error
 plot_options["data_kwargs"] = {'label':'exp', 'color':'red', 
