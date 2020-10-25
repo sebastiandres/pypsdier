@@ -48,9 +48,9 @@ def plot(plot_options="all", inputs={}, outputs={},
         else:
           pyplot.plot(data_x, data_y, 'bs', **default_data_kwargs)
     # labels
-    pyplot.xlabel(plot_options["label_x"])
-    pyplot.ylabel(plot_options["label_y"])
-    pyplot.title(plot_options["title"])
+    pyplot.xlabel(plot_options["label_x"], fontsize=20)
+    pyplot.ylabel(plot_options["label_y"], fontsize=20)
+    pyplot.title(plot_options["title"], fontsize=24)
     xlim = ax.get_xlim()
     dx = .025*(xlim[1]-xlim[0])
     ax.set_xlim(xlim[0]-dx, xlim[1]+dx)
@@ -62,7 +62,7 @@ def plot(plot_options="all", inputs={}, outputs={},
     box = ax.get_position()
     ax.set_position([box.x0, box.y0 + box.height * 0.1,
                     box.width, box.height * 0.9])
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.10), 
+    ax.legend(loc='upper center', fontsize=20, bbox_to_anchor=(0.5, -0.10), 
               fancybox=True, shadow=True, ncol=3, 
               numpoints=1) # Show only * instead of ** as marker legend
     # Save figure

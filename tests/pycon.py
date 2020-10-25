@@ -26,8 +26,9 @@ plot_options["data_kwargs"] = {'label':'exp', 'color':'red', 'marker':'s', 'mark
 plot_options["data_x"] = [0.0, 30, 60, 90, 120]
 plot_options["data_y"] = [1.3, 0.65, 0.25, 0.10, 0.0]
 
-# import pypsdier
+# import pypsdierxºº
 import pypsdier
+"""
 SIM1 = pypsdier.SimulationInterface()
 SIM1.new(inputs, plot_options)
 SIM1.status()
@@ -41,13 +42,14 @@ SIM1.save("pycon_ANOTHER_example.rde")
 SIM1.export_xls("pycon_example.xls")
 
 SIM1.plot()
+"""
 
 #----
 import pypsdier
 SIM2 = pypsdier.SimulationInterface()
-SIM2.load("pycon_saving_example.rde") # load instead of new
+SIM2.load("pycon_colab_example.rde") # load instead of new
 SIM2.status()
 
-SIM2.export_xls("saving_to_another_excel_file.xls")
+#SIM2.export_xls("saving_to_another_excel_file.xls")
 
 SIM2.plot()
