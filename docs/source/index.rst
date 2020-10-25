@@ -1,10 +1,9 @@
-Welcome to the documentation!
-==============================
+Welcome to the pypsdier's documentation!
+=========================================
 
 **pypsdier** is a python library to solve 
 pde reaction-difussion equations, 
 considering inmmobilized catalyst particles.
-
 
 Test it
 --------
