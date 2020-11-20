@@ -8,9 +8,9 @@ considering inmmobilized catalyst particles.
 Test it
 --------
 
-* In `Google Colab <https://htmlpreview.github.io/?https://github.com/sebastiandres/pypsdier/blob/master/tests/colab_test.html>`_.
+* In `Google Colab <https://htmlpreview.github.io/?https://github.com/sebastiandres/pypsdier/blob/master/demo/colab_test.html>`_.
 
-* In `MyBinder <https://htmlpreview.github.io/?https://github.com/sebastiandres/pypsdier/blob/master/tests/binder_test.html>`_.
+* In `MyBinder <https://htmlpreview.github.io/?https://github.com/sebastiandres/pypsdier/blob/master/demo/binder_test.html>`_.
 
 
 .. toctree::
