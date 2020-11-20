@@ -45,9 +45,9 @@ This requires to define dictionaries with specific keys.
     inputs["CatalystEnzymeConcentration"] = 0.35 # [mM]
 
     plot_options = {}
-    plot_options["title"] = "Simulación de Michaelis Menten para la PyconAr"
-    plot_options["label_x"] = "Tiempo de reacción [s]"
-    plot_options["label_y"] = "Concentración [mM]"
+    plot_options["title"] = "Michaelis Menten Reaction"
+    plot_options["label_x"] = "Reaction time [s]"
+    plot_options["label_y"] = "Concentration [mM]"
     plot_options["ode_kwargs"] = {'label':'ode', 'color':'black', 'marker':'', 'markersize':6, 'linestyle':'dashed', 'linewidth':2}
     plot_options["pde_kwargs"] = {'label':'pde', 'color':'black', 'marker':'', 'markersize':6, 'linestyle':'solid', 'linewidth':2}
     plot_options["data_kwargs"] = {'label':'exp', 'color':'red', 'marker':'s', 'markersize':6, 'linestyle':'none', 'linewidth':2}
