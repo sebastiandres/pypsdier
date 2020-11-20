@@ -54,42 +54,48 @@ This requires to define dictionaries with specific keys.
     plot_options["data_x"] = [0.0, 30, 60, 90, 120]
     plot_options["data_y"] = [1.3, 0.65, 0.25, 0.10, 0.0]
 
+
 Creating a new simulation requires to use a new simulation interface. 
 
 .. code-block:: python
 
     import pypsdier
-    SIM1 = pypsdier.SimulationInterface()
-    SIM1.new(inputs, plot_options)
+    SIM = pypsdier.SimulationInterface()
+    SIM.new(inputs, plot_options)
+
 
 To simulate you need to the corresponding method:
 
 .. code-block:: python
     
-    SIM1.simulate("pde")
-    SIM1.simulate("ode")
+    SIM.simulate("pde")
+    SIM.simulate("ode")
+
 
 At any point of the code you can use the `status` method to know if the required libraries are installed, what are the inputs, plot options and simulation statuses.
 
 .. code-block:: python
     
-    SIM1.status()
+    SIM.status()
+
 
 You can plot the results with the `plot` method. If needed, you can update the plot_options dictionary.
 Use `plot?` to know available plotting arguments.
 
 .. code-block:: python
     
-    SIM1.plot()
+    SIM.plot()
+
 
 You can generate and download a compressed simulation file, so you can late load your results
 
 .. code-block:: python
     
-    SIM1.save("SIM1.rde")
+    SIM.save("SIM.rde")
+
 
 Or you can generate an excel file to explore the results to use a more familiar program.
 
 .. code-block:: python
 
-    SIM1.export_xls("SIM1.xls")
+    SIM.export_xls("SIM.xls")
