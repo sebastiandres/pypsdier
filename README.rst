@@ -19,5 +19,5 @@ Take it for a spin
 * In `MyBinder <https://htmlpreview.github.io/?https://github.com/sebastiandres/pypsdier/blob/master/demo/binder_test.html>`_.
 
 
-This libary applies the ideas from `GeneralSimulationLibrary <https://readthedocs.org/projects/generalsimulationlibrary/>`_, 
+The pypsdier library applies the ideas from `GeneralSimulationLibrary <https://readthedocs.org/projects/generalsimulationlibrary/>`_, 
 a package encapsulates a methodology and tools for reproducible simulations.
