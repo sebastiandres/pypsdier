@@ -8,15 +8,17 @@ considering inmmobilized catalyst particles.
 It extends the `GeneralSimulationLibrary <https://readthedocs.org/projects/generalsimulationlibrary/>`_, 
 a package encapsulates a methodology and tools for reproducible simulations.
 
-Test it
---------
-
-* In `Google Colab <https://colab.research.google.com/drive/1mfSZQOhe7qq1C-YpfX5dDpSedXGVjz4e?usp=sharing>`_.
-
-* In `MyBinder <https://mybinder.org/v2/gh/sebastiandres/GenericSimulationLibrary/master?filepath=tests%2Fjupyter_test.ipynb>`_.
-
-
-Need more info?
+Documentation
 -----------------------------------
 
-`Read the docs! <https://pypsdier.readthedocs.io/en/latest/>`_.
+All the documentation is at `Read the docs! <https://pypsdier.readthedocs.io/en/latest/>`_.
+
+
+Take it for a spin
+--------------------
+
+* In `Google Colab <https://htmlpreview.github.io/?https://github.com/sebastiandres/pypsdier/blob/master/tests/colab_test.html>`_.
+
+* In `MyBinder <https://htmlpreview.github.io/?https://github.com/sebastiandres/pypsdier/blob/master/tests/binder_test.html>`_.
+
+

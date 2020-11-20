@@ -15,7 +15,7 @@ Catalysts 2019, 9(11), 930.
 * Reproducible Computation: `MyBinder <TO BE UPDATED>`_ , `Colab <TO BE UPDATED>`_.
  
 Mathematical Methods in the Applied Sciences 2019, 42:4170-4183. 
-******************************************************
+************************************************************************
 * Title: An inverse problem for an immobilized enzyme model.
 * Authors: Gajardo, D., Mercado, A., Valencia, P. 
 * Link: https://doi.org/10.1002/mma.5637
@@ -60,7 +60,7 @@ Biochemical Engineering Journal, Volume 49, Issue 2, 15 April 2010, Pages 256–
 List of aditional articles related to immobilized enzyme catalysts and difusional restrictions.
 
 Biochemical Engineering Journal, Volume 91, 129-139, 2014. 
-******************************************************
+************************************************************
 * Title: Theoretical analysis of intrinsic reaction kinetics and the behavior of immobilized enzymas system for steady-state conditions.
 * Authors: Praveen, T., Valencia, P., Rajendran, L.
 * Link: http://dx.doi.org/10.1016/j.bej.2014.08.001
@@ -72,7 +72,7 @@ Enzyme and Microbial Technology, Volume 47, Issue 6, pp 268-276, 2010
 * Link: http://dx.doi.org/10.1016/j.enzmictec.2010.07.010
 
 Electronic Journal of Biotechnology, Volume 13, Issue 1, 15 January 2010, Pages 256–263.
-**************************************************************************************
+*****************************************************************************************
 * Title: Diffusional restrictions in glyoxyl-agarose immobilized penicillin G acylase of different particle size and protein loading.
 * Authors: Andrés Illanes, José M. González, Juan M. Gómez, Pedro Valencia, Lorena Wilson.
 * Link: http://dx.doi.org/10.2225/vol13-issue1-fulltext-12

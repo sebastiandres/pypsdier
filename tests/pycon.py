@@ -52,4 +52,4 @@ SIM2.status()
 
 #SIM2.export_xls("saving_to_another_excel_file.xls")
 
-SIM2.plot()
+SIM2.plot(figsize=(20,12), filename="test.png")
