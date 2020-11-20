@@ -5,8 +5,8 @@ Welcome to the pypsdier's documentation!
 pde reaction-difussion equations, 
 considering inmmobilized catalyst particles.
 
-Test it
---------
+Try it out!
+------------
 
 * In `Google Colab <https://htmlpreview.github.io/?https://github.com/sebastiandres/pypsdier/blob/master/demo/colab_test.html>`_.
 
@@ -15,12 +15,12 @@ Test it
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
+   :caption: Documenation:
 
    intro
-   problem
    install
    examples
+   problem
    equations
    implementation
    articles
@@ -29,5 +29,5 @@ Test it
    links
    doc_for_devs
 
-**pypsdier** is based on `GeneralSimulationLibrary <https://readthedocs.org/projects/generalsimulationlibrary/>`_, 
+**pypsdier** is based on the ideas of `GeneralSimulationLibrary <https://generalsimulationlibrary.readthedocs.io/en/latest//>`_, 
 a package encapsulates a methodology and tools for reproducible simulations.
